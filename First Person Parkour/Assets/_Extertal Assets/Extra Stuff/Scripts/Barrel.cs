@@ -2,20 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Barrel : MonoBehaviour, IDamagable
+public class Barrel : MonoBehaviour
 {
     [SerializeField] ParticleSystem burstVFX;
-    float hp = 30;
     [SerializeField] Light pointLight;
-    public void GetDamage(float damage)
-    {
-        hp -= damage;
 
-        if(hp <= 0.001f)
+
+    private void OnTriggerEnter(Collider other)
+    {
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+        if (player)
         {
             MakeBoom();
         }
-
     }
 
     void MakeBoom()
@@ -24,7 +23,7 @@ public class Barrel : MonoBehaviour, IDamagable
         GetComponent<AudioSource>().Play();
         Destroy(gameObject, 2);
         GetComponent<MeshRenderer>().enabled = false;
-        GetComponent<MeshCollider>().enabled = false;
+        GetComponent<Collider>().enabled = false;
         StartCoroutine(DamageNear());
     }
 
